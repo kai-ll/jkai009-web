@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen" />
   <title>Time Shift Arena</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a12; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: #fff; }
+    html, body {
+      width: 100%; height: 100%;
+      background: #0a0a12; overflow: hidden;
+      font-family: 'Segoe UI', sans-serif; color: #fff;
+      -webkit-overflow-scrolling: touch;
+    }
 
-    #gameCanvas { display: block; width: 100vw; height: 100vh; }
+    #gameCanvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      touch-action: none;
+    }
 
     .screen-overlay {
       position: fixed; inset: 0;
@@ -211,6 +224,65 @@
 
     #result-score { font-size: 3rem; font-weight: 900; color: #38bdf8; }
     #result-detail { font-size: 0.9rem; color: #94a3b8; text-align: center; line-height: 1.8; }
+
+    @media (orientation: portrait) {
+      #hud-left {
+        top: 12px; left: 12px;
+      }
+      .bar-track { width: 130px; }
+
+      #time-state-indicator {
+        top: 12px; right: 12px;
+        font-size: 0.75rem; padding: 4px 10px;
+      }
+
+      #hud-top {
+        top: 12px;
+        gap: 10px;
+      }
+      #hud-timer { font-size: 1.3rem; padding: 3px 12px; }
+
+      #segment-label { top: 48px; font-size: 0.68rem; }
+
+      #skill-btn {
+        bottom: max(24px, env(safe-area-inset-bottom, 24px));
+        right: 24px;
+        width: 72px; height: 72px; font-size: 1.8rem;
+      }
+
+      #boss-hp-bar {
+        bottom: max(100px, calc(env(safe-area-inset-bottom, 0px) + 100px));
+        width: min(92vw, 400px);
+      }
+
+      #kill-counter {
+        bottom: max(24px, env(safe-area-inset-bottom, 24px));
+        left: 24px;
+      }
+
+      #camera-debug {
+        display: none;
+      }
+
+      .upgrade-card { width: min(160px, 28vw); padding: 16px 12px; }
+      .upgrade-card-icon { font-size: 1.8rem; }
+      .upgrade-card-label { font-size: 0.9rem; }
+      .upgrade-card-desc { font-size: 0.72rem; }
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      @media (orientation: portrait) {
+        #skill-btn {
+          bottom: calc(env(safe-area-inset-bottom) + 24px);
+        }
+        #kill-counter {
+          bottom: calc(env(safe-area-inset-bottom) + 24px);
+        }
+        #boss-hp-bar {
+          bottom: calc(env(safe-area-inset-bottom) + 100px);
+        }
+      }
+    }
 
     #joystick-zone {
       position: fixed; z-index: 60;
@@ -1312,21 +1384,31 @@
       async boot() {
         const canvas = document.getElementById('gameCanvas');
         this._renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        this._renderer.setSize(window.innerWidth, window.innerHeight);
         this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this._renderer.shadowMap.enabled = true;
-        window.addEventListener('resize', () => {
-          this._renderer.setSize(window.innerWidth, window.innerHeight);
-          this._camera.aspect = window.innerWidth / window.innerHeight;
-          this._camera.updateProjectionMatrix();
+
+        const resizeRenderer = () => {
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          this._renderer.setSize(w, h);
+          if (this._camera) {
+            this._camera.aspect = w / h;
+            this._camera.updateProjectionMatrix();
+            this._adjustCameraForAspect();
+          }
+        };
+        window.addEventListener('resize', resizeRenderer);
+        screen.orientation && screen.orientation.addEventListener('change', () => {
+          setTimeout(resizeRenderer, 100);
         });
+        resizeRenderer();
 
         this._scene = new THREE.Scene();
         this._scene.background = new THREE.Color(0x1a2a1a);
         this._scene.fog = new THREE.FogExp2(0x1a2a1a, 0.012);
 
         this._camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
-        this._camera.position.set(0, 28, 20);
+        this._adjustCameraForAspect();
         this._camera.lookAt(0, 0, 0);
 
         const ambient = new THREE.AmbientLight(0xffffff, 1.2);
@@ -1673,16 +1755,38 @@
         this._cameraFollow(realDelta);
       }
 
+      _adjustCameraForAspect() {
+        if (!this._camera) return;
+        const aspect = window.innerWidth / window.innerHeight;
+        const isPortrait = aspect < 1.0;
+        if (isPortrait) {
+          this._camera.fov = 75;
+          this._camera.position.set(0, 38, 30);
+        } else {
+          this._camera.fov = 55;
+          this._camera.position.set(0, 28, 34);
+        }
+        this._camera.aspect = aspect;
+        this._camera.updateProjectionMatrix();
+      }
+
       _cameraFollow(dt) {
         const locked = document.getElementById('dbg-cam-lock')?.checked;
+        const aspect = window.innerWidth / window.innerHeight;
+        const isPortrait = aspect < 1.0;
         if (locked) {
-          this._camera.position.set(0, 28, 34);
+          if (isPortrait) {
+            this._camera.position.set(0, 38, 30);
+          } else {
+            this._camera.position.set(0, 28, 34);
+          }
           this._camera.lookAt(0, 0, 0);
           return;
         }
         if (!this._player) return;
         const targetX = this._player.position.x * 0.3;
-        const targetZ = this._player.position.z * 0.3 + 20;
+        const baseZ = isPortrait ? 22 : 20;
+        const targetZ = this._player.position.z * 0.3 + baseZ;
         this._camera.position.x += (targetX - this._camera.position.x) * dt * 2;
         this._camera.position.z += (targetZ - this._camera.position.z) * dt * 2;
         this._camera.lookAt(this._player.position.x * 0.2, 0, this._player.position.z * 0.2);
