@@ -1,0 +1,77 @@
+{
+  "upgrades": [
+    {
+      "id": "slow_plus",
+      "label": "Deep Freeze",
+      "description": "Stopped time slows to 10%",
+      "icon": "snowflake",
+      "effects": [
+        { "type": "setStat", "key": "stopTimeScale", "value": 0.1 }
+      ]
+    },
+    {
+      "id": "attack_speed_up",
+      "label": "Swift Strike",
+      "description": "Auto-attack speed +50% while stopped",
+      "icon": "sword",
+      "effects": [
+        { "type": "multiplyStat", "key": "attackCooldown", "value": 0.667 }
+      ]
+    },
+    {
+      "id": "move_speed_up",
+      "label": "Fleet Foot",
+      "description": "Move speed +20%",
+      "icon": "boots",
+      "effects": [
+        { "type": "multiplyStat", "key": "moveSpeed", "value": 1.2 }
+      ]
+    },
+    {
+      "id": "full_stop_skill",
+      "label": "Time Freeze",
+      "description": "Activate full time stop for 2 seconds (15s cooldown)",
+      "icon": "clock",
+      "effects": [
+        { "type": "unlockSkill", "key": "timeFreeze" }
+      ]
+    },
+    {
+      "id": "bullet_reflect",
+      "label": "Mirror Shield",
+      "description": "Reflect enemy projectiles while stopped",
+      "icon": "shield",
+      "effects": [
+        { "type": "unlockPassive", "key": "bulletReflect" }
+      ]
+    },
+    {
+      "id": "aoe_burst",
+      "label": "Pulse Wave",
+      "description": "AoE pulse attack every 3 seconds while stopped",
+      "icon": "burst",
+      "effects": [
+        { "type": "unlockPassive", "key": "aoeBurst" }
+      ]
+    },
+    {
+      "id": "stop_energy_up",
+      "label": "Endurance",
+      "description": "Stop energy max +50 and drains 30% slower",
+      "icon": "battery",
+      "effects": [
+        { "type": "addStat", "key": "maxStopEnergy", "value": 50 },
+        { "type": "multiplyStat", "key": "stopEnergyDrainRate", "value": 0.7 }
+      ]
+    },
+    {
+      "id": "projectile_damage_up",
+      "label": "Power Shot",
+      "description": "Projectile damage +40%",
+      "icon": "arrow",
+      "effects": [
+        { "type": "multiplyStat", "key": "projectileDamage", "value": 1.4 }
+      ]
+    }
+  ]
+}

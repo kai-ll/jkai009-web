@@ -1,0 +1,95 @@
+{
+  "duration": 300,
+  "segments": [
+    {
+      "start": 0,
+      "end": 30,
+      "spawns": [
+        { "enemyId": "goblin_melee", "count": 3, "interval": 8.0 }
+      ],
+      "notes": "tutorial melee only"
+    },
+    {
+      "start": 30,
+      "end": 60,
+      "spawns": [
+        { "enemyId": "skeleton_ranged", "count": 2, "interval": 10.0 }
+      ],
+      "notes": "teach time perception with ranged"
+    },
+    {
+      "start": 60,
+      "end": 90,
+      "spawns": [
+        { "enemyId": "goblin_melee", "count": 3, "interval": 6.0 },
+        { "enemyId": "skeleton_ranged", "count": 3, "interval": 8.0 }
+      ],
+      "notes": "first tension segment"
+    },
+    {
+      "start": 90,
+      "end": 120,
+      "upgradeBreak": true,
+      "spawns": [],
+      "notes": "first upgrade break at 1:30"
+    },
+    {
+      "start": 120,
+      "end": 150,
+      "spawns": [
+        { "enemyId": "zombie_melee", "count": 2, "interval": 12.0 },
+        { "enemyId": "skeleton_armor_tank", "count": 1, "interval": 15.0 }
+      ],
+      "notes": "feel your build with tankier enemies"
+    },
+    {
+      "start": 150,
+      "end": 180,
+      "spawns": [
+        { "enemyId": "wizard_ranged", "count": 3, "interval": 5.0 },
+        { "enemyId": "skeleton_ranged", "count": 3, "interval": 6.0 }
+      ],
+      "notes": "pressure ramps up with many ranged"
+    },
+    {
+      "start": 180,
+      "end": 210,
+      "spawns": [
+        { "enemyId": "demon_elite", "count": 1, "interval": 20.0 },
+        { "enemyId": "goblin_melee", "count": 3, "interval": 7.0 }
+      ],
+      "notes": "elite encounter with radial patterns"
+    },
+    {
+      "start": 210,
+      "end": 240,
+      "upgradeBreak": true,
+      "spawns": [],
+      "notes": "second upgrade break at 3:30"
+    },
+    {
+      "start": 240,
+      "end": 270,
+      "spawns": [
+        { "enemyId": "wizard_ranged", "count": 5, "interval": 4.0 },
+        { "enemyId": "skeleton_armor_tank", "count": 2, "interval": 10.0 },
+        { "enemyId": "demon_elite", "count": 1, "interval": 25.0 }
+      ],
+      "notes": "climax - maximum density"
+    },
+    {
+      "start": 270,
+      "end": 300,
+      "boss": true,
+      "spawns": [
+        { "enemyId": "giant_boss", "count": 1, "interval": 999 }
+      ],
+      "notes": "boss fight"
+    }
+  ],
+  "upgradeBreaks": [90, 210],
+  "boss": {
+    "spawnAt": 270,
+    "enemyId": "giant_boss"
+  }
+}

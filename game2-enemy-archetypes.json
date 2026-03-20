@@ -1,0 +1,147 @@
+{
+  "archetypes": {
+    "goblin_melee": {
+      "id": "goblin_melee",
+      "asset": "/assets/cubeworld/Enemies/glTF/Goblin.gltf",
+      "role": "melee",
+      "moveSpeed": 8.4,
+      "hp": 20,
+      "maxHp": 20,
+      "collisionRadius": 0.35,
+      "scale": 1.0,
+      "color": "#5a8a3a",
+      "attack": {
+        "type": "contact",
+        "damage": 10,
+        "cooldown": 1.2,
+        "range": 0.9
+      },
+      "ai": { "behavior": "chase_segment", "segmentLength": 8 },
+      "xp": 10
+    },
+    "zombie_melee": {
+      "id": "zombie_melee",
+      "asset": "/assets/cubeworld/Enemies/glTF/Zombie.gltf",
+      "role": "melee",
+      "moveSpeed": 6.4,
+      "hp": 35,
+      "maxHp": 35,
+      "collisionRadius": 0.4,
+      "scale": 1.0,
+      "color": "#6b8a4a",
+      "attack": {
+        "type": "contact",
+        "damage": 15,
+        "cooldown": 1.8,
+        "range": 0.9
+      },
+      "ai": { "behavior": "chase" },
+      "xp": 12
+    },
+    "skeleton_ranged": {
+      "id": "skeleton_ranged",
+      "asset": "/assets/cubeworld/Enemies/glTF/Skeleton.gltf",
+      "role": "ranged",
+      "moveSpeed": 1.8,
+      "hp": 18,
+      "maxHp": 18,
+      "collisionRadius": 0.35,
+      "scale": 1.0,
+      "color": "#c8c8a0",
+      "attack": {
+        "type": "projectile",
+        "damage": 8,
+        "cooldown": 1.2,
+        "range": 30.0,
+        "projectileSpeed": 9
+      },
+      "ai": { "behavior": "keepDistanceAndShoot", "preferredDistance": 6.0 },
+      "xp": 15
+    },
+    "wizard_ranged": {
+      "id": "wizard_ranged",
+      "asset": "/assets/cubeworld/Enemies/glTF/Wizard.gltf",
+      "role": "ranged",
+      "moveSpeed": 1.6,
+      "hp": 22,
+      "maxHp": 22,
+      "collisionRadius": 0.35,
+      "scale": 1.0,
+      "color": "#8050c0",
+      "attack": {
+        "type": "projectile",
+        "damage": 12,
+        "cooldown": 2.1,
+        "range": 50.0,
+        "projectileSpeed": 7.5
+      },
+      "ai": { "behavior": "keepDistanceAndShoot", "preferredDistance": 7.0 },
+      "xp": 18
+    },
+    "skeleton_armor_tank": {
+      "id": "skeleton_armor_tank",
+      "asset": "/assets/cubeworld/Enemies/glTF/Skeleton_Armor.gltf",
+      "role": "tank",
+      "moveSpeed": 3.2,
+      "hp": 80,
+      "maxHp": 80,
+      "collisionRadius": 0.5,
+      "scale": 1.1,
+      "color": "#888888",
+      "attack": {
+        "type": "contact",
+        "damage": 20,
+        "cooldown": 2.0,
+        "range": 1.0
+      },
+      "ai": { "behavior": "chase" },
+      "xp": 25
+    },
+    "demon_elite": {
+      "id": "demon_elite",
+      "asset": "/assets/cubeworld/Enemies/glTF/Demon.gltf",
+      "role": "elite",
+      "moveSpeed": 4.0,
+      "hp": 120,
+      "maxHp": 120,
+      "collisionRadius": 0.5,
+      "scale": 1.2,
+      "color": "#c02020",
+      "attack": {
+        "type": "radialBurst",
+        "damage": 10,
+        "cooldown": 3.5,
+        "range": 12.0,
+        "projectileCount": 8,
+        "projectileSpeed": 4.0
+      },
+      "ai": { "behavior": "elitePatternCaster" },
+      "xp": 50
+    },
+    "giant_boss": {
+      "id": "giant_boss",
+      "asset": "/assets/cubeworld/Enemies/glTF/Giant.gltf",
+      "role": "boss",
+      "moveSpeed": 2.6,
+      "hp": 600,
+      "maxHp": 600,
+      "collisionRadius": 1.0,
+      "scale": 2.0,
+      "color": "#a06020",
+      "attack": {
+        "type": "mixed",
+        "damage": 18,
+        "cooldown": 2.0,
+        "range": 14.0,
+        "projectileSpeed": 4.0
+      },
+      "ai": { "behavior": "bossPatternController" },
+      "xp": 300,
+      "phases": [
+        { "hpThreshold": 1.0, "pattern": "radialBurst" },
+        { "hpThreshold": 0.6, "pattern": "homingShots" },
+        { "hpThreshold": 0.3, "pattern": "dashAttack" }
+      ]
+    }
+  }
+}

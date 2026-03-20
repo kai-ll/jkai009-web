@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Viewer - CubeKey Dungeon</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-bottom: 2px solid #334155;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      background: linear-gradient(to right, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #334155;
+      color: #f1f5f9;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .back-button:hover {
+      background: #475569;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      font-size: 1.2rem;
+      color: #94a3b8;
+    }
+
+    .category {
+      margin-bottom: 3rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #334155;
+    }
+
+    .category-header h2 {
+      font-size: 1.75rem;
+      color: #fbbf24;
+    }
+
+    .category-header .count {
+      background: #334155;
+      color: #fbbf24;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .asset-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .asset-card:hover {
+      transform: translateY(-4px);
+      border-color: #fbbf24;
+      box-shadow: 0 8px 16px rgba(251, 191, 36, 0.1);
+    }
+
+    .asset-card .model-container {
+      width: 100%;
+      height: 200px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .asset-card .status {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+    .status.waiting {
+      background: #64748b;
+      color: white;
+    }
+
+    .status.loading {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .status.ready {
+      background: #10b981;
+      color: white;
+    }
+
+    .status.error {
+      background: #ef4444;
+      color: white;
+    }
+
+    .placeholder {
+      font-size: 3rem;
+      color: #334155;
+    }
+
+    .asset-card h3 {
+      font-size: 1.1rem;
+      color: #f1f5f9;
+      margin-bottom: 0.5rem;
+    }
+
+    .asset-card .file-name {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-family: 'Courier New', monospace;
+    }
+
+    .summary {
+      background: rgba(30, 41, 59, 0.6);
+      border: 2px solid #334155;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary h2 {
+      color: #fbbf24;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .summary-item {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 0.5rem;
+    }
+
+    .summary-item .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fbbf24;
+      display: block;
+    }
+
+    .summary-item .label {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      text-transform: capitalize;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .stats {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+      z-index: 100;
+    }
+
+    .stats div {
+      margin-bottom: 0.25rem;
+    }
+
+    .stats .label {
+      color: #94a3b8;
+      margin-right: 0.5rem;
+    }
+
+    .stats .value {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>Asset Viewer</h1>
+    <p>화면에 보이는 오브젝트만 자동으로 로드됩니다 (스크롤하여 더 많은 에셋 확인)</p>
+    <a href="/" class="back-button">← 메인으로 돌아가기</a>
+  </div>
+
+  <div class="container">
+    <div id="loading" class="loading">에셋 데이터를 불러오는 중...</div>
+    <div id="summary" style="display: none;"></div>
+    <div id="content"></div>
+  </div>
+
+  <div class="stats">
+    <div><span class="label">로드됨:</span><span class="value" id="loaded-count">0</span></div>
+    <div><span class="label">활성 WebGL:</span><span class="value" id="active-webgl">0</span></div>
+    <div><span class="label">전체:</span><span class="value" id="total-count">0</span></div>
+  </div>
+
+  <script>
+    const gltfLoader = new THREE.GLTFLoader();
+    const activeModels = new Map();
+    let totalAssets = 0;
+
+    function updateStats() {
+      document.getElementById('active-webgl').textContent = activeModels.size;
+      document.getElementById('loaded-count').textContent = Array.from(activeModels.values()).filter(m => m.loaded).length;
+      document.getElementById('total-count').textContent = totalAssets;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const container = entry.target;
+        const assetPath = container.dataset.assetPath;
+
+        if (entry.isIntersecting) {
+          if (!activeModels.has(assetPath)) {
+            loadModel(container, assetPath);
+          }
+        } else {
+          if (activeModels.has(assetPath)) {
+            cleanupModel(assetPath);
+          }
+        }
+      });
+    }, {
+      rootMargin: '100px',
+      threshold: 0.1
+    });
+
+    function loadModel(container, path) {
+      const statusEl = container.querySelector('.status');
+      const placeholderEl = container.querySelector('.placeholder');
+
+      if (statusEl) {
+        statusEl.textContent = '로딩 중';
+        statusEl.className = 'status loading';
+      }
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0f172a);
+
+      const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(2, 2, 2);
+      camera.lookAt(0, 0, 0);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight1.position.set(5, 5, 5);
+      scene.add(directionalLight1);
+
+      const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      directionalLight2.position.set(-5, 3, -5);
+      scene.add(directionalLight2);
+
+      let animationId = null;
+      let model = null;
+
+      gltfLoader.load(
+        path,
+        (gltf) => {
+          if (!activeModels.has(path)) {
+            renderer.dispose();
+            return;
+          }
+
+          if (placeholderEl) {
+            placeholderEl.remove();
+          }
+
+          if (statusEl) {
+            statusEl.textContent = '준비됨';
+            statusEl.className = 'status ready';
+            setTimeout(() => {
+              if (statusEl.parentNode) {
+                statusEl.remove();
+              }
+            }, 1500);
+          }
+
+          model = gltf.scene;
+
+          const box = new THREE.Box3().setFromObject(model);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 1.5 / maxDim;
+          model.scale.setScalar(scale);
+
+          model.position.sub(center.multiplyScalar(scale));
+
+          scene.add(model);
+
+          container.appendChild(renderer.domElement);
+
+          let rotation = 0;
+
+          function animate() {
+            if (!activeModels.has(path)) {
+              return;
+            }
+
+            animationId = requestAnimationFrame(animate);
+            rotation += 0.005;
+            model.rotation.y = rotation;
+            renderer.render(scene, camera);
+          }
+          animate();
+
+          activeModels.get(path).loaded = true;
+          updateStats();
+        },
+        (progress) => {
+          if (statusEl && progress.total > 0) {
+            const percent = Math.round((progress.loaded / progress.total) * 100);
+            statusEl.textContent = `${percent}%`;
+          }
+        },
+        (error) => {
+          console.error('모델 로딩 실패:', path, error);
+          if (statusEl) {
+            statusEl.textContent = '실패';
+            statusEl.className = 'status error';
+          }
+          renderer.dispose();
+          activeModels.delete(path);
+          updateStats();
+        }
+      );
+
+      activeModels.set(path, {
+        renderer,
+        scene,
+        animationId,
+        loaded: false
+      });
+
+      updateStats();
+    }
+
+    function cleanupModel(path) {
+      const modelData = activeModels.get(path);
+      if (!modelData) return;
+
+      if (modelData.animationId) {
+        cancelAnimationFrame(modelData.animationId);
+      }
+
+      if (modelData.renderer) {
+        const container = document.querySelector(`[data-asset-path="${path}"]`);
+        if (container) {
+          const canvas = container.querySelector('canvas');
+          if (canvas) {
+            canvas.remove();
+          }
+
+          let html = '<div class="status waiting">대기 중</div>';
+          html += '<div class="placeholder">📦</div>';
+          container.innerHTML = html;
+        }
+
+        modelData.renderer.dispose();
+        modelData.renderer.forceContextLoss();
+      }
+
+      if (modelData.scene) {
+        modelData.scene.traverse((object) => {
+          if (object.geometry) {
+            object.geometry.dispose();
+          }
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(material => material.dispose());
+            } else {
+              object.material.dispose();
+            }
+          }
+        });
+      }
+
+      activeModels.delete(path);
+      updateStats();
+    }
+
+    async function loadAssets() {
+      try {
+        const response = await fetch('/assets/cubeworld/assets.json');
+        const data = await response.json();
+
+        document.getElementById('loading').style.display = 'none';
+
+        totalAssets = data.summary.totalAssets;
+        updateStats();
+
+        renderSummary(data.summary);
+        renderCategories(data.categories);
+
+      } catch (error) {
+        document.getElementById('loading').innerHTML = '에셋 데이터를 불러오는데 실패했습니다: ' + error.message;
+      }
+    }
+
+    function renderSummary(summary) {
+      const summaryEl = document.getElementById('summary');
+      summaryEl.style.display = 'block';
+
+      let html = '<div class="summary"><h2>전체 요약</h2><div class="summary-grid">';
+      html += `<div class="summary-item"><span class="number">${summary.totalAssets}</span><span class="label">Total Assets</span></div>`;
+
+      for (const [category, count] of Object.entries(summary.byCategory)) {
+        html += `<div class="summary-item"><span class="number">${count}</span><span class="label">${category}</span></div>`;
+      }
+
+      html += '</div></div>';
+      summaryEl.innerHTML = html;
+    }
+
+    function renderCategories(categories) {
+      const contentEl = document.getElementById('content');
+
+      for (const [categoryKey, categoryData] of Object.entries(categories)) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category';
+
+        categoryDiv.innerHTML = `
+          <div class="category-header">
+            <h2>${categoryData.label}</h2>
+            <span class="count">${categoryData.count} assets</span>
+          </div>
+          <div class="asset-grid" id="grid-${categoryKey}"></div>
+        `;
+
+        contentEl.appendChild(categoryDiv);
+
+        const gridEl = document.getElementById(`grid-${categoryKey}`);
+
+        categoryData.assets.forEach(asset => {
+          const card = createAssetCard(asset);
+          gridEl.appendChild(card);
+        });
+      }
+    }
+
+    function createAssetCard(asset) {
+      const card = document.createElement('div');
+      card.className = 'asset-card';
+
+      card.innerHTML = `
+        <div class="model-container" data-asset-path="${asset.path}">
+          <div class="status waiting">대기 중</div>
+          <div class="placeholder">📦</div>
+        </div>
+        <h3>${asset.name}</h3>
+        <div class="file-name">${asset.file}</div>
+      `;
+
+      const container = card.querySelector('.model-container');
+      observer.observe(container);
+
+      return card;
+    }
+
+    window.addEventListener('beforeunload', () => {
+      activeModels.forEach((_, path) => cleanupModel(path));
+    });
+
+    loadAssets();
+  </script>
+</body>
+</html>

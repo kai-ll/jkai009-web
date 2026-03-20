@@ -1,0 +1,17 @@
+{
+  "player": {
+    "maxHp": 100,
+    "maxAttackEnergy": 100,
+    "moveSpeed": 5.0,
+    "attackCooldown": 1.0,
+    "projectileDamage": 15,
+    "projectileSpeed": 32.0,
+    "attackEnergyDrainRate": 20,
+    "attackEnergyRecoverRate": 15,
+    "stopTimeScale": 0.2,
+    "movingTimeScale": 1.0,
+    "skillCooldown": 15,
+    "freezeDuration": 2.0,
+    "timeScaleSmoothing": 0.12
+  }
+}
