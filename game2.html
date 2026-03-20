@@ -183,23 +183,35 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       background: rgba(0,0,0,0.85);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       z-index: 200; gap: 24px;
+      pointer-events: all;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
     }
-    #upgrade-overlay.hidden { display: none; }
+    #upgrade-overlay.hidden { display: none; pointer-events: none; }
     #upgrade-title { font-size: 1.8rem; font-weight: 800; color: #f8fafc; }
     #upgrade-subtitle { font-size: 0.9rem; color: #94a3b8; }
-    #upgrade-cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    #upgrade-cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; touch-action: manipulation; }
 
     .upgrade-card {
       width: 200px; padding: 20px 16px;
       background: rgba(15,23,42,0.9); border: 1px solid #334155;
       border-radius: 12px; cursor: pointer; text-align: center;
-      transition: all 0.2s; pointer-events: all;
+      transition: all 0.2s;
+      pointer-events: all;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(56,189,248,0.2);
     }
     .upgrade-card:hover {
       border-color: #38bdf8; background: rgba(30,41,59,0.95);
       transform: translateY(-4px); box-shadow: 0 8px 24px rgba(56,189,248,0.2);
+    }
+    .upgrade-card:active {
+      border-color: #38bdf8; background: rgba(30,41,59,0.95);
+      transform: scale(0.97); box-shadow: 0 4px 12px rgba(56,189,248,0.3);
     }
     .upgrade-card-icon { font-size: 2.2rem; margin-bottom: 10px; }
     .upgrade-card-label { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
@@ -590,7 +602,7 @@
         window.addEventListener('mousedown', e => {
           if (e.button !== 0) return;
           const tag = e.target.tagName;
-          if (tag === 'BUTTON' || e.target.closest('button') || e.target.closest('#hud') || e.target.closest('#pause-overlay') || e.target.closest('#result-overlay')) return;
+          if (tag === 'BUTTON' || e.target.closest('button') || e.target.closest('#hud') || e.target.closest('#pause-overlay') || e.target.closest('#result-overlay') || e.target.closest('#upgrade-overlay') || e.target.closest('.screen-overlay')) return;
           e.preventDefault();
           startInput(e.clientX, e.clientY);
         });
@@ -604,7 +616,7 @@
 
         window.addEventListener('touchstart', e => {
           const tgt = e.target;
-          if (tgt.closest('button') || tgt.closest('#hud') || tgt.closest('#pause-overlay') || tgt.closest('#result-overlay')) return;
+          if (tgt.closest('button') || tgt.closest('#hud') || tgt.closest('#pause-overlay') || tgt.closest('#result-overlay') || tgt.closest('#upgrade-overlay') || tgt.closest('.screen-overlay')) return;
           e.preventDefault();
           const t = e.touches[0];
           startInput(t.clientX, t.clientY);
@@ -1663,7 +1675,9 @@
           const card = document.createElement('div');
           card.className = 'upgrade-card';
           card.innerHTML = `<div class="upgrade-card-icon">${this._upgradeIcon(upg.icon)}</div><div class="upgrade-card-label">${upg.label}</div><div class="upgrade-card-desc">${upg.description}</div>`;
-          card.onclick = () => {
+          const selectUpgrade = (e) => {
+            e.stopPropagation();
+            if (this.state !== GameState.UPGRADE) return;
             this._player.applyUpgrade(upg);
             this._usedUpgrades.add(upg.id);
             this._pendingUpgrade = false;
@@ -1671,6 +1685,8 @@
             document.getElementById('upgrade-overlay').classList.add('hidden');
             this.state = GameState.RUNNING;
           };
+          card.addEventListener('click', selectUpgrade);
+          card.addEventListener('touchend', (e) => { e.preventDefault(); selectUpgrade(e); }, { passive: false });
           container.appendChild(card);
         });
         document.getElementById('upgrade-overlay').classList.remove('hidden');
