@@ -2,7 +2,7 @@
   "archetypes": {
     "goblin_melee": {
       "id": "goblin_melee",
-      "asset": "/assets/cubeworld/Enemies/glTF/Goblin.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Goblin.gltf",
       "role": "melee",
       "moveSpeed": 8.4,
       "hp": 20,
@@ -21,7 +21,7 @@
     },
     "zombie_melee": {
       "id": "zombie_melee",
-      "asset": "/assets/cubeworld/Enemies/glTF/Zombie.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Zombie.gltf",
       "role": "melee",
       "moveSpeed": 6.4,
       "hp": 35,
@@ -40,7 +40,7 @@
     },
     "skeleton_ranged": {
       "id": "skeleton_ranged",
-      "asset": "/assets/cubeworld/Enemies/glTF/Skeleton.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Skeleton.gltf",
       "role": "ranged",
       "moveSpeed": 1.8,
       "hp": 18,
@@ -60,7 +60,7 @@
     },
     "wizard_ranged": {
       "id": "wizard_ranged",
-      "asset": "/assets/cubeworld/Enemies/glTF/Wizard.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Wizard.gltf",
       "role": "ranged",
       "moveSpeed": 1.6,
       "hp": 22,
@@ -80,7 +80,7 @@
     },
     "skeleton_armor_tank": {
       "id": "skeleton_armor_tank",
-      "asset": "/assets/cubeworld/Enemies/glTF/Skeleton_Armor.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Skeleton_Armor.gltf",
       "role": "tank",
       "moveSpeed": 3.2,
       "hp": 80,
@@ -99,7 +99,7 @@
     },
     "demon_elite": {
       "id": "demon_elite",
-      "asset": "/assets/cubeworld/Enemies/glTF/Demon.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Demon.gltf",
       "role": "elite",
       "moveSpeed": 4.0,
       "hp": 120,
@@ -120,7 +120,7 @@
     },
     "giant_boss": {
       "id": "giant_boss",
-      "asset": "/assets/cubeworld/Enemies/glTF/Giant.gltf",
+      "asset": "/jkai009-web/assets/cubeworld/Enemies/glTF/Giant.gltf",
       "role": "boss",
       "moveSpeed": 2.6,
       "hp": 600,

@@ -736,7 +736,7 @@
     let CONFIG = null;
 
     async function loadConfig() {
-      const response = await fetch('/game-config.json');
+      const response = await fetch('/jkai009-web/game-config.json');
       CONFIG = await response.json();
       return CONFIG;
     }
@@ -1973,7 +1973,7 @@
       }
 
       async generate() {
-        this.mapData = await this.mapLoader.loadFromFile('/dungeon001.txt');
+        this.mapData = await this.mapLoader.loadFromFile('/jkai009-web/dungeon001.txt');
         this.floorTiles = this.mapLoader.findFloorTiles(this.mapData);
 
         const playerSpawn = this.mapLoader.findPlayerSpawn(this.floorTiles);
@@ -3109,16 +3109,16 @@
       await loadConfig();
 
       const assets = [
-        { name: 'Character_Male_1', path: '/assets/cubeworld/Characters/glTF/Character_Male_1.gltf' },
-        { name: 'Skeleton', path: '/assets/cubeworld/Enemies/glTF/Skeleton.gltf' },
-        { name: 'Goblin', path: '/assets/cubeworld/Enemies/glTF/Goblin.gltf' },
-        { name: 'Wizard', path: '/assets/cubeworld/Enemies/glTF/Wizard.gltf' },
-        { name: 'Key', path: '/assets/cubeworld/Environment/glTF/Key.gltf' },
-        { name: 'Chest_Closed', path: '/assets/cubeworld/Environment/glTF/Chest_Closed.gltf' },
-        { name: 'Chest_Open', path: '/assets/cubeworld/Environment/glTF/Chest_Open.gltf' },
-        { name: 'Block_Stone', path: '/assets/cubeworld/Blocks/glTF/Block_Stone.gltf' },
-        { name: 'Block_GreyBricks', path: '/assets/cubeworld/Blocks/glTF/Block_GreyBricks.gltf' },
-        { name: 'Crystal_Big', path: '/assets/cubeworld/Environment/glTF/Crystal_Big.gltf' }
+        { name: 'Character_Male_1', path: '/jkai009-web/assets/cubeworld/Characters/glTF/Character_Male_1.gltf' },
+        { name: 'Skeleton', path: '/jkai009-web/assets/cubeworld/Enemies/glTF/Skeleton.gltf' },
+        { name: 'Goblin', path: '/jkai009-web/assets/cubeworld/Enemies/glTF/Goblin.gltf' },
+        { name: 'Wizard', path: '/jkai009-web/assets/cubeworld/Enemies/glTF/Wizard.gltf' },
+        { name: 'Key', path: '/jkai009-web/assets/cubeworld/Environment/glTF/Key.gltf' },
+        { name: 'Chest_Closed', path: '/jkai009-web/assets/cubeworld/Environment/glTF/Chest_Closed.gltf' },
+        { name: 'Chest_Open', path: '/jkai009-web/assets/cubeworld/Environment/glTF/Chest_Open.gltf' },
+        { name: 'Block_Stone', path: '/jkai009-web/assets/cubeworld/Blocks/glTF/Block_Stone.gltf' },
+        { name: 'Block_GreyBricks', path: '/jkai009-web/assets/cubeworld/Blocks/glTF/Block_GreyBricks.gltf' },
+        { name: 'Crystal_Big', path: '/jkai009-web/assets/cubeworld/Environment/glTF/Crystal_Big.gltf' }
       ];
 
       window.assetLoader = new AssetLoader();

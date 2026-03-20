@@ -632,10 +632,10 @@
           [-14, -14], [14, -14], [-14, 14], [14, 14],
         ];
         const decoAssets = [
-          '/assets/cubeworld/Environment/glTF/Tree_1.gltf',
-          '/assets/cubeworld/Environment/glTF/Rock1.gltf',
-          '/assets/cubeworld/Environment/glTF/Bush.gltf',
-          '/assets/cubeworld/Environment/glTF/Crystal_Big.gltf',
+          '/jkai009-web/assets/cubeworld/Environment/glTF/Tree_1.gltf',
+          '/jkai009-web/assets/cubeworld/Environment/glTF/Rock1.gltf',
+          '/jkai009-web/assets/cubeworld/Environment/glTF/Bush.gltf',
+          '/jkai009-web/assets/cubeworld/Environment/glTF/Crystal_Big.gltf',
         ];
         for (let i = 0; i < positions.length; i++) {
           const assetPath = decoAssets[i % decoAssets.length];
@@ -688,8 +688,8 @@
       }
       async _loadMesh(registry) {
         try {
-          await registry.load('/assets/cubeworld/Characters/glTF/Character_Male_1.gltf');
-          this._mesh = registry.clone('/assets/cubeworld/Characters/glTF/Character_Male_1.gltf');
+          await registry.load('/jkai009-web/assets/cubeworld/Characters/glTF/Character_Male_1.gltf');
+          this._mesh = registry.clone('/jkai009-web/assets/cubeworld/Characters/glTF/Character_Male_1.gltf');
           this._mesh.scale.setScalar(0.9);
         } catch(e) {
           const geo = new THREE.CapsuleGeometry(0.35, 1.0, 4, 8);
@@ -1340,21 +1340,21 @@
 
         this._registry = new AssetRegistry();
         await this._registry.preload([
-          '/assets/cubeworld/Characters/glTF/Character_Male_1.gltf',
-          '/assets/cubeworld/Enemies/glTF/Goblin.gltf',
-          '/assets/cubeworld/Enemies/glTF/Skeleton.gltf',
-          '/assets/cubeworld/Enemies/glTF/Wizard.gltf',
-          '/assets/cubeworld/Enemies/glTF/Zombie.gltf',
-          '/assets/cubeworld/Enemies/glTF/Skeleton_Armor.gltf',
-          '/assets/cubeworld/Enemies/glTF/Demon.gltf',
-          '/assets/cubeworld/Enemies/glTF/Giant.gltf',
+          '/jkai009-web/assets/cubeworld/Characters/glTF/Character_Male_1.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Goblin.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Skeleton.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Wizard.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Zombie.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Skeleton_Armor.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Demon.gltf',
+          '/jkai009-web/assets/cubeworld/Enemies/glTF/Giant.gltf',
         ]).catch(() => {});
 
         const [timelineData, archetypeData, upgradesData, playerConfigData] = await Promise.all([
-          fetch('/game2-stage1-timeline.json').then(r => { if (!r.ok) throw new Error('timeline 404'); return r.json(); }),
-          fetch('/game2-enemy-archetypes.json').then(r => { if (!r.ok) throw new Error('archetypes 404'); return r.json(); }),
-          fetch('/game2-upgrades.json').then(r => { if (!r.ok) throw new Error('upgrades 404'); return r.json(); }),
-          fetch('/game2-player-config.json').then(r => { if (!r.ok) throw new Error('player-config 404'); return r.json(); }),
+          fetch('/jkai009-web/game2-stage1-timeline.json').then(r => { if (!r.ok) throw new Error('timeline 404'); return r.json(); }),
+          fetch('/jkai009-web/game2-enemy-archetypes.json').then(r => { if (!r.ok) throw new Error('archetypes 404'); return r.json(); }),
+          fetch('/jkai009-web/game2-upgrades.json').then(r => { if (!r.ok) throw new Error('upgrades 404'); return r.json(); }),
+          fetch('/jkai009-web/game2-player-config.json').then(r => { if (!r.ok) throw new Error('player-config 404'); return r.json(); }),
         ]);
         this._timeline = timelineData;
         this._archetypesDef = archetypeData.archetypes;
